@@ -3,6 +3,7 @@ const express = require("express");
 const userRouter = require("./routes/userRoutes");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 const cookieParser = require("cookie-parser");
+const openAIRouter = require("./routes/openAIRoutes");
 require("./utils/connectDb")();
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,6 +14,7 @@ app.use(cookieParser());
 
 //Routes
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/openai", openAIRouter);
 app.use(errorMiddleware);
 
 app.get("/", (req, res) => res.send("Hello World!"));
