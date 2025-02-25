@@ -7,6 +7,7 @@ const cron = require("node-cron");
 const openAIRouter = require("./routes/openAIRoutes");
 const stripePaymentRouter = require("./routes/stripePaymentRoutes");
 const User = require("./models/User");
+const cors = require("cors");
 require("./utils/connectDb")();
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -30,7 +31,6 @@ cron.schedule("0 0 * * * *", async () => {
         apiRequestCount: 0,
       }
     );
-    console.log(updatedUsers);
   } catch (error) {
     console.error(error);
   }
@@ -102,6 +102,13 @@ cron.schedule("0 0 1 * * *", async () => {
 //Middlewares
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 //Routes
 app.use("/api/v1/users", userRouter);
