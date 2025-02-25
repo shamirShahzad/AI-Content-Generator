@@ -102,8 +102,7 @@ const logout = asyncHandler(async (req, res) => {
 
 //!Get user profile
 const userProfile = asyncHandler(async (req, res) => {
-  const id = "67bc94a74b4fd58d11adfd29";
-  const user = await User.findById(id).select("-password");
+  const user = await User.findById(req?.user?.id).select("-password");
   if (!user) {
     res.status(404);
     throw new Error("User not found");

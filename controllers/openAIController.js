@@ -32,6 +32,7 @@ const openAIController = asyncHandler(async (req, res) => {
 
   const user = await User.findById(req?.user?._id);
   user?.history?.push(history?._id);
+  user.apiRequestCount += 1;
   await user?.save();
 
   res.status(200).json({
