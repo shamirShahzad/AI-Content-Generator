@@ -102,7 +102,10 @@ const logout = asyncHandler(async (req, res) => {
 
 //!Get user profile
 const userProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req?.user?.id).select("-password");
+  const user = await User.findById(req?.user?.id)
+    .select("-password")
+    .populate("payment")
+    .populate("history");
   if (!user) {
     res.status(404);
     throw new Error("User not found");
@@ -114,6 +117,21 @@ const userProfile = asyncHandler(async (req, res) => {
   });
 });
 
+//! Check User Auth Status
+
+const checkAuth = asyncHandler(async (req, res) => {
+  const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
+  if (decoded) {
+    res.json({
+      isAuthenticated: true,
+    });
+  } else {
+    ers.json({
+      isAuthenticated: false,
+    });
+  }
+});
+
 //!Export
 
 const usersController = {
@@ -121,6 +139,7 @@ const usersController = {
   login,
   logout,
   userProfile,
+  checkAuth,
 };
 
 module.exports = usersController;

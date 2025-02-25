@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema(
     trialExpires: {
       type: Date,
     },
-    subscription: {
+    subscriptionPlan: {
       type: String,
       enum: ["Trial", "Free", "Basic", "Premium"],
     },
@@ -39,14 +39,18 @@ const userSchema = new mongoose.Schema(
       default: 100,
     },
     nextBillingDate: Date,
-    payment: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Payment",
-    },
-    history: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "History",
-    },
+    payment: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Payment",
+      },
+    ],
+    history: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "History",
+      },
+    ],
   },
   {
     timestamps: true,
@@ -56,11 +60,6 @@ const userSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-
-//!Add virtual property to user
-userSchema.virtual("isTrialActive").get(function () {
-  return this.trialActive && new Date() < this.trialExpires;
-});
 
 const User = mongoose.model("User", userSchema);
 
