@@ -126,7 +126,7 @@ const checkAuth = asyncHandler(async (req, res) => {
       isAuthenticated: true,
     });
   } else {
-    ers.json({
+    res.json({
       isAuthenticated: false,
     });
   }
