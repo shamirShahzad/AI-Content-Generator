@@ -123,6 +123,10 @@ const handleFreeSubscription = asyncHandler(async (req, res) => {
       user.apiRequestCount = 0;
       //Calculate the next billing date
       user.nextBillingDate = calculateNextBillingDate();
+      if (user.trialActive) {
+        user.trialActive = false;
+        user.trialPeriod = 0;
+      }
 
       //create new payment and save into db
       const newPayment = await Payment.create({
